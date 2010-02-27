@@ -28,7 +28,7 @@ options = {
   # Password
   :pass             =>  "Solera",
   # Filename for returned PCAP
-  :output_filename  =>  "data.pcap",
+  :filename  =>  "data.pcap",
   #
   # Available DeepSee API Method Parameters
   #
@@ -65,9 +65,9 @@ optparse = OptionParser.new do|opts|
   opts.on( '-u', '--username USERNAME', String, 'Username USERNAME' )                 {|options[:user]|}
   opts.on( '-p', '--password PASSWORD', String, 'Password PASSWORD' )                 {|options[:pass]|}
   opts.on( '--host HOSTNAME', String, 'Hostname or IP of Solera Appliance to Query' ) {|options[:host]|}
-  opts.on( '-o', '--output_filename FILENAME', String, 'Filename for Returned PCAP' ) {|options[:output_filename]|}
+  opts.on( '-o', '--output_filename FILENAME', String, 'Filename for Returned PCAP' ) {|options[:filename]|}
   opts.on( '--ipv4_address IP', String, 'ipv4_address' )                              {|options[:ipv4_address]|}
-  opts.on( '--start_time START_TIME', String, 'start_time' )                           {|options[:start_time]|}
+  opts.on( '--start_time START_TIME', String, 'start_time' )                          {|options[:start_time]|}
   opts.on( '--end_time END_TIME', String, 'end_time' )                                {|options[:end_time]|}
   opts.on( '-h', '--help', 'Display this screen' ) do
     puts opts
@@ -77,28 +77,18 @@ end
 
 optparse.parse!
 
-#options[:filename] = ARGV[0]
-
-# if options[:filename].nil?
-#   puts optparse
-#   exit
-# end
-
-puts "Being Verbose" if options[:verbose]
-puts "Username : #{options[:user]}" if options[:user] && options[:verbose]
-puts "Password : #{options[:pass]}" if options[:pass] && options[:verbose]
-puts "DS Appliance : #{options[:host]}" if options[:host] && options[:verbose]
-puts "Output Filename : #{options[:filename]}" if options[:filename] && options[:verbose]
-puts "ipv4_address : #{options[:ipv4_address]}" if options[:ipv4_address] && options[:verbose]
-puts "Start Time: #{options[:start_time]}" if options[:start_time] && options[:verbose]
-puts "End Time: #{options[:end_time]}" if options[:end_time] && options[:verbose]
+if options[:verbose]
+  puts "Being Verbose"
+  puts "Username : #{options[:user]}" if options[:user]
+  puts "Password : #{options[:pass]}" if options[:pass]
+  puts "DS Appliance : #{options[:host]}" if options[:host]
+  puts "Output Filename : #{options[:filename]}" if options[:filename]
+  puts "ipv4_address : #{options[:ipv4_address]}" if options[:ipv4_address]
+  puts "Start Time: #{options[:start_time]}" if options[:start_time]
+  puts "End Time: #{options[:end_time]}" if options[:end_time]
+end
 
 def buildcall(options)
-  # Take all arguments
-  # Format Arguments
-  # Mash it all togethor
-  # Build Path
-  # Build Call : Long and Drawn out for ease of reading/editing
   api_call =  "https://#{options[:host]}/ws/pcap?method=deepsee&"
   api_call += "user=#{options[:user]}&"
   api_call += "password=#{options[:pass]}&"
@@ -120,14 +110,9 @@ def readable(size, precision)
   end
 end
 
-begin
-  api_call_uri = buildcall(options)
-  open(api_call_uri, 'User-Agent' => 'Wget') {|call| @pcap = call.read}
-  File.open(options[:filename], 'w') {|f| 
-    f.write(@pcap) 
-    puts "#{options[:filename]} : " + readable(f.stat.size, 2)
-    }
-  
-rescue => error
-  puts "Awww SNAP!! : #{error}"
-end
+api_call_uri = buildcall(options)
+open(api_call_uri, 'User-Agent' => 'Wget') {|call| @pcap = call.read}
+File.open(options[:filename], 'w') {|f| 
+  f.write(@pcap) 
+  puts "#{options[:filename]} : " + readable(f.stat.size, 2)
+  }
