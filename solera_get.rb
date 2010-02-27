@@ -65,7 +65,7 @@ optparse = OptionParser.new do|opts|
   opts.on( '-u', '--username USERNAME', String, 'Username USERNAME' )                 {|options[:user]|}
   opts.on( '-p', '--password PASSWORD', String, 'Password PASSWORD' )                 {|options[:pass]|}
   opts.on( '--host HOSTNAME', String, 'Hostname or IP of Solera Appliance to Query' ) {|options[:host]|}
-  opts.on( '-o', '--output_filename FILENAME', String, 'Filename for Returned PCAP' ) {|options[:filename]|}
+  opts.on( '-o', '--filename FILENAME', String, 'Filename for Returned PCAP' ) {|options[:filename]|}
   opts.on( '--ipv4_address IP', String, 'ipv4_address' )                              {|options[:ipv4_address]|}
   opts.on( '--start_time START_TIME', String, 'start_time' )                          {|options[:start_time]|}
   opts.on( '--end_time END_TIME', String, 'end_time' )                                {|options[:end_time]|}
@@ -110,9 +110,14 @@ def readable(size, precision)
   end
 end
 
-api_call_uri = buildcall(options)
-open(api_call_uri, 'User-Agent' => 'Wget') {|call| @pcap = call.read}
-File.open(options[:filename], 'w') {|f| 
-  f.write(@pcap) 
-  puts "#{options[:filename]} : " + readable(f.stat.size, 2)
-  }
+begin
+  api_call_uri = buildcall(options)
+  open(api_call_uri, 'User-Agent' => 'Wget') {|call| @pcap = call.read}
+  File.open(options[:filename], 'w') {|f| 
+    f.write(@pcap) 
+    puts "#{options[:filename]} : " + readable(f.stat.size, 2)
+    }
+rescue => error
+  puts "Awww SNAP! : #{error}"
+  #puts @pcap.inspect
+end
