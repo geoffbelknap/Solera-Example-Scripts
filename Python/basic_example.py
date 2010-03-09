@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env python
 
 ## Solera Networks API Example Script
 ## gbelknap@soleranetworks.com
@@ -15,37 +15,33 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 
-require 'open-uri'
-require 'openssl'
+import urllib
+import time
 
-# Ignore self-signed SSL Certificates
-module OpenSSL
-  module SSL
-    remove_const :VERIFY_PEER
-  end
-end
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+class AppURLopener(urllib.FancyURLopener):
+    version = "Wget"
+    
+urllib._urlopener = AppURLopener()
 
 options = {
   # DS Appliance Management IP
   # [CHANGE_ME]
-  :host         =>  "1.2.3.4",
+  'host'            :   "1.2.3.4",
   # Username for Accessing API
-  :user         =>  "admin",
+  'user'            :   "admin",
   # Password for Accessing API
   # [CHANGE_ME]
-  :pass         =>  "Password",
+  'passwd'          :   "Password",
   # Filename for Returned PCAP
-  :filename     =>  "data.pcap",
+  'filename'        :   "data.pcap",
   # Target IP
   # [CHANGE_ME]
-  :ipv4_address =>  "1.2.3.4",
+  'ipv4_address'    :   "1.2.3.4",
   # A Timespan is specified as start_time.end_time in the format of strftime('%m.%d.%Y.%H.%M.%S')
   # Target Timespan (Previous 5 Mins to Present)
-  :timespan     =>  (Time.now.getlocal-(60*5)).strftime('%m.%d.%Y.%H.%M.%S')+"."+Time.now.getlocal.strftime('%m.%d.%Y.%H.%M.%S')
+  'timespan'        :   time.strftime('%m.%d.%Y.%H.%M.%S', (time.localtime(time.time()-300)))+"."+time.strftime('%m.%d.%Y.%H.%M.%S', time.localtime())
 }
 
-api_call =  "https://#{options[:host]}/ws/pcap?method=deepsee&user=#{options[:user]}&password=#{options[:pass]}&path=%2Ftimespan%2F#{options[:timespan]}%2Fipv4_address%2F#{options[:ipv4_address]}%2Fdata.pcap"
-open(api_call, 'User-Agent' => 'Wget') {|call| @pcap = call.read}
-File.open(options[:filename], 'w') {|f| f.write(@pcap)}
+api_call =  "https://"+options['host']+"/ws/pcap?method=deepsee&user="+options['user']+"&password="+options['passwd']+"&path=%2Ftimespan%2F"+options['timespan']+"%2Fipv4_address%2F"+options['ipv4_address']+"%2Fdata.pcap"
 
+urllib.urlretrieve(api_call, options['filename'])
