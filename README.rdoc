@@ -2,6 +2,13 @@
 
 Demo / Example Scripts for Utilizing Solera Networks API.
 
+== Where to get a Demo VM Appliance 
+
+Don't have a Solera DS Network Forensics Appliance?
+
+Download a VMWare Based Demo Appliance Here:
+http://www.soleranetworks.com/products/network-forensics-appliances/virtual-appliance
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
