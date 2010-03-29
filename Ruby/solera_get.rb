@@ -37,11 +37,11 @@ options = {
   # Be Verbose?
   :verbose                =>  false,
   # DS Appliance to Send
-  :host                   =>  "10.1.3.174",
+  :host                   =>  "1.2.3.4",
   # Username for Accessing API
-  :user                   =>  "admin",
+  :user                   =>  "changeme",
   # Password
-  :pass                   =>  "Solera",
+  :pass                   =>  "changeme",
   # Filename for returned PCAP
   :output_filename        =>  "data.pcap",
   #
