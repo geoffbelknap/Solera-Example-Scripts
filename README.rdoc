@@ -9,6 +9,15 @@ Don't have a Solera DS Network Forensics Appliance?
 Download a VMWare Based Demo Appliance Here:
 http://www.soleranetworks.com/products/network-forensics-appliances/virtual-appliance
 
+== Solera Networks Ruby GEM
+
+Looking for the Solera Networks Ruby GEM?  
+
+	$ sudo gem install soleranetworks
+
+Or Download the pkg here: http://rubygems.org/gems/soleranetworks
+Or Get the Source Here: http://github.com/fracBlend/soleranetworks
+
 == Note on Patches/Pull Requests
  
 * Fork the project.
